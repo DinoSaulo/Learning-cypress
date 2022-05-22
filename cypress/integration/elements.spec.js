@@ -81,13 +81,31 @@ describe('Work with basic elements', () => {
             .should('have.value', '1graucomp')
 
         //TODO validar as opções do combo
+        cy.get('[data-test=dataEscolaridade] option').should('have.length', 8)
+
+
+        cy.get('[data-test=dataEscolaridade] option').then($arr => {
+            var values = []
+            $arr.each(function() {
+                values.push(this.innerHTML)
+            })
+            expect(values).to.include.members(["Superior", "Mestrado"])
+        })
     })
 
     it.only('Combo multiplo', () => {
         cy.get('[data-testid=dataEsportes]')
             .select(['natacao', 'Corrida', 'nada']) // enviar o value para funcionar
 
-        //TODO validar opções selecionadas do combo multiplo
+        // validar opções selecionadas do combo multiplo
+        //cy.get('[data-test=dataEscolaridade] option').should('have.value', ['natacao', 'Corrida', 'nada'])
+        cy.get('[data-testid=dataEsportes]').then($el => {
+            expect($el.val()).to.be.deep.equal(['natacao', 'Corrida', 'nada'])
+            expect($el.val()).to.have.length(3)
+        })
+
+        // mesma coisa feita de uma forma diferete
+        cy.get('[data-testid=dataEsportes]').invoke('val').should('eql', ['natacao', 'Corrida', 'nada'])
     })
 })
 
